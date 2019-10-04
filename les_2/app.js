@@ -32,23 +32,30 @@ app.get('/login', (req, res) => {
 
 app.get('/register', (req, res) => {
     res.render('register')
+});
+
+app.get('/user/:userID', (req, res) => {
+    const userSer = users.find( user => +req.params.userID === user.user_id);
+
+    res.json(userSer)
 
 });
-app.post('/register', (req, res) => {
-    const body = req.body;
-    body['body_id'] = users.length + 1;
-    users.push(body);
-    console.log(body);
 
+
+app.post('/register', (req, res) => {
+    const user = req.body;
+    user.user_id = users.length + 1;
+    users.push(user);
+    console.log(user);
 });
 
 
 app.post('/login', (req, res) => {
-    const body = req.body;
-    users.forEach(user => {
-        if (user.userName === body.userName & user.password === body.password){
-            res.redirect()
-        }
+    const login = req.body;
+    users.forEach( user => {
+        if(user.userName === login.userName && user.password === login.userPassword){
+            res.redirect(`/user/${user.user_id}`)
+        } else (res.json('login or password invalid'))
     })
 
 });
