@@ -17,6 +17,7 @@ app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'static'));
 
 const users = [];
+const houses = [];
 
 app.get('/', (req, res) => {
     res.render('main');
@@ -36,11 +37,18 @@ app.get('/register', (req, res) => {
 
 app.get('/user/:userID', (req, res) => {
     const userSer = users.find( user => +req.params.userID === user.user_id);
-
-    res.json(userSer)
-
+    userSer ? res.json(userSer) : res.status(400).render('User not fined');
+    // res.json(userSer)
 });
 
+app.get('/house', (req, res) => {
+    res.render('house')
+});
+
+app.get('/house/:houseID', (req, res) =>{
+   const houseSer = houses.find(house => +req.params.houseID === house.house_id);
+    houseSer ? res.json(houseSer) : res.status(400).render('House not fined')
+});
 
 app.post('/register', (req, res) => {
     const user = req.body;
@@ -49,15 +57,28 @@ app.post('/register', (req, res) => {
     console.log(user);
 });
 
+app.post('/house', (req, res) => {
+    const newHouse = req.body;
+    newHouse.house_id = houses.length + 1;
+    houses.push(newHouse);
+    console.log(newHouse);
+
+    res.redirect(`/house/${newHouse.house_id}`)
+});
+
 
 app.post('/login', (req, res) => {
     const login = req.body;
-    users.forEach( user => {
-        if(user.userName === login.userName && user.password === login.userPassword){
-            res.redirect(`/user/${user.user_id}`)
-        } else (res.json('login or password invalid'))
-    })
 
+    const findUser = users.find(user => user.userName === login.userName && user.password === login.userPassword);
+    findUser ? res.redirect(`/user/${findUser.user_id}`) : res.status(400).render('login or password invalid');
+});
+
+
+app.post('/search', (req, res) => {
+    const searHouse = req.body;
+    const findHouse = houses.find(house => house.city === searHouse.city);
+    findHouse ? res.redirect(`/house/${findHouse.house_id}`) : res.status(400).render('House not fined')
 });
 
 app.all('*', (req, res) => {
