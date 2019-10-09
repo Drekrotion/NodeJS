@@ -8,7 +8,9 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-const { user, render } = require('./controllers');
+const {user, render} = require('./controllers');
+const {provider} = require('./database');
+const {user: userMiddleware} = require('./middleware');
 
 
 app.engine('.hbs', expHbs({
@@ -25,15 +27,14 @@ app.get('/login', render.renderLogin);
 app.get('/register', render.renderRegister);
 app.get('/house', render.renderAddHouse);
 
+app.get('/user/:userID', userMiddleware.checkUserIdMiddleware, user.userById);
 
-app.get('/user/:userID', user.userById);
-
-app.post('/login', user.userLogin);
-app.post('/register', user.userRegister);
+app.post('/login', userMiddleware.checkLoginMiddleware, user.userLogin);
+app.post('/register', userMiddleware.checkUserValidityMiddleware, user.userRegister);
 
 
-app.get('/house/:houseID', (req, res) =>{
-   const houseSer = houses.find(house => +req.params.houseID === house.house_id);
+app.get('/house/:houseID', (req, res) => {
+    const houseSer = houses.find(house => +req.params.houseID === house.house_id);
     houseSer ? res.json(houseSer) : res.status(400).render('House not fined')
 });
 
@@ -57,6 +58,12 @@ app.post('/search', (req, res) => {
 app.all('*', (req, res) => {
     res.json('404 NOT FOUND')
 });
+
+// app.all('*', async (req, res) => {
+//     let [queryy] = await provider.promise().query('SELECT * FROM user');
+//     console.log(queryy[3]);
+//     res.json(queryy[3])
+// });
 
 app.listen(3000, () => {
     console.log('GO GO GO GO GO');
