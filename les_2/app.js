@@ -8,10 +8,9 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-const {user, render} = require('./controllers');
+const {user, render, house} = require('./controllers');
 const {provider} = require('./database');
-const {user: userMiddleware} = require('./middleware');
-
+const {user: userMiddleware, houseMiddleware} = require('./middleware');
 
 app.engine('.hbs', expHbs({
     extname: '.hbs',
@@ -21,49 +20,29 @@ app.engine('.hbs', expHbs({
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'static'));
 
-
 app.get('/', render.renderMain);
 app.get('/login', render.renderLogin);
 app.get('/register', render.renderRegister);
 app.get('/house', render.renderAddHouse);
+app.get('/update', render.renderUpdate);
 
 app.get('/user/:userID', userMiddleware.checkUserIdMiddleware, user.userById);
 
-app.post('/login', userMiddleware.checkLoginMiddleware, user.userLogin);
 app.post('/register', userMiddleware.checkUserValidityMiddleware, user.userRegister);
+app.post('/login', userMiddleware.checkLoginMiddleware, user.userLogin);
 
+app.get('/house/:houseID', houseMiddleware.houseByid, house.houseById);
 
-app.get('/house/:houseID', (req, res) => {
-    const houseSer = houses.find(house => +req.params.houseID === house.house_id);
-    houseSer ? res.json(houseSer) : res.status(400).render('House not fined')
-});
+app.post('/house', house.addHouse);
+app.post('/search', houseMiddleware.houseSearch, house.searchHouse);
 
-app.post('/house', (req, res) => {
-    const newHouse = req.body;
-    newHouse.house_id = houses.length + 1;
-    houses.push(newHouse);
-    console.log(newHouse);
+app.post('/users', userMiddleware.checkUserUpdateValidityMiddleware, userMiddleware.checkUserUpdPresentMiddleware, user.userUpdate);
 
-    res.redirect(`/house/${newHouse.house_id}`)
-});
-
-
-app.post('/search', (req, res) => {
-    const searHouse = req.body;
-    const findHouse = houses.find(house => house.city === searHouse.city);
-    findHouse ? res.redirect(`/house/${findHouse.house_id}`) : res.status(400).render('House not fined')
-});
-
+app.post('/houses', houseMiddleware.houseUpdateValid, houseMiddleware.houseUpdatePresent, house.updateHouse);
 
 app.all('*', (req, res) => {
     res.json('404 NOT FOUND')
 });
-
-// app.all('*', async (req, res) => {
-//     let [queryy] = await provider.promise().query('SELECT * FROM user');
-//     console.log(queryy[3]);
-//     res.json(queryy[3])
-// });
 
 app.listen(3000, () => {
     console.log('GO GO GO GO GO');

@@ -2,12 +2,16 @@ const {userValidator} = require('../../validators');
 
 module.exports = (req, res, next) => {
     try {
-        const user = req.body;
+        const UpdateUserData = req.body;
 
-        userValidator.newUserValidator(user);
+        userValidator.updateUserValidator(UpdateUserData);
 
         next()
-    } catch (e) {
+
+    }catch (e) {
+
         res.status(400).json(e.message)
+
     }
+
 };

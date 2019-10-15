@@ -3,7 +3,6 @@ module.exports = (req, res) => {
     const {id} = req.userValid
 
     res.redirect(`user/${id}`)
-
 };
 
 

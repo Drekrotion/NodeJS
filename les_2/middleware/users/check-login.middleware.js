@@ -1,9 +1,10 @@
-const {provider} = require('../../database');
+const { provider } = require('../../database');
 
 module.exports = async (req, res, next) => {
     try {
         const {email, password} = req.body;
         const validLogin = `SELECT * FROM user WHERE email = ? AND password = ?`;
+
         const [validUser] = await provider.promise().query(validLogin, [email, password]);
 
         if (!validUser.length) {

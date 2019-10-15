@@ -1,10 +1,10 @@
-const {provider} = require('../../database');
-
+const { provider } = require('../../database');
 
 module.exports = async (req, res, next) => {
     try {
         const {userID} = req.params;
         const searchId = `SELECT * FROM user WHERE id = ?`;
+
         const [serId] = await provider.promise().query(searchId, [userID]);
 
         if (!serId.length) {
@@ -17,5 +17,4 @@ module.exports = async (req, res, next) => {
     } catch (e) {
         res.status(400).json(e.message)
     }
-
 };
