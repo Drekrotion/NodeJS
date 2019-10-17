@@ -36,9 +36,9 @@ app.get('/house/:houseID', houseMiddleware.houseByid, house.houseById);
 app.post('/house', house.addHouse);
 app.post('/search', houseMiddleware.houseSearch, house.searchHouse);
 
-app.post('/users', userMiddleware.checkUserUpdateValidityMiddleware, userMiddleware.checkUserUpdPresentMiddleware, user.userUpdate);
+app.post('/usersMiddleware', userMiddleware.checkUserUpdateValidityMiddleware, userMiddleware.checkUserUpdPresentMiddleware, user.userUpdate);
 
-app.post('/houses', houseMiddleware.houseUpdateValid, houseMiddleware.houseUpdatePresent, house.updateHouse);
+app.post('/houseMiddleware', houseMiddleware.houseUpdateValid, houseMiddleware.houseUpdatePresent, house.updateHouse);
 
 app.all('*', (req, res) => {
     res.json('404 NOT FOUND')

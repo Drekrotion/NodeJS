@@ -12,8 +12,8 @@ module.exports = async (req, res) => {
 
 // module.exports = async (req, res) => {
 //     const user = req.body;
-//     user.user_id = users.length + 1;
-//     users.push(user);
+//     user.user_id = usersMiddleware.length + 1;
+//     usersMiddleware.push(user);
 //     console.log(user);
 // };
 
