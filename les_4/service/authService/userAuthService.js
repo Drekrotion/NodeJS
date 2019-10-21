@@ -11,7 +11,7 @@ module.exports = async (email, password) => {
         attributes: ['id']
     });
 
-    return findingUser && findingUser.dataValue;
+    return findingUser && findingUser.dataValues;
 
 };
 

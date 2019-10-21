@@ -1,16 +1,16 @@
 // const dataBase = require('../../dataBase').getInstance();
-const authService = require('../../service');
+const {authService} = require('../../service');
 
 module.exports = async (req, res, next) => {
     try {
         const {email, password} = req.body;
-        const findingUser = authService.userAuthService(email, password);
+        const findingUser = await authService.userAuthService(email, password);
 
         if (!findingUser) {
             throw new Error('Incorrect password or email')
         }
 
-        req.user = findingUser.dataValues;
+        req.user = findingUser;
         next()
 
     } catch (e) {
