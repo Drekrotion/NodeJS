@@ -1,11 +1,10 @@
-const dataBase = require('../../dataBase').getInstance();
+const houseServices = require('../../service');
 
 module.exports = async (req, res) => {
     try {
         const creatingHouse = req.body;
-        const HouseModel = dataBase.getModel('House');
 
-        const createdHouse = await HouseModel.create(creatingHouse);
+        const NewHouse = await houseServices.houseService.createHouse(creatingHouse);
 
         res.json(`Your new House`)
 

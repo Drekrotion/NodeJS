@@ -1,14 +1,13 @@
-const dataBase = require('../../dataBase').getInstance();
+const userService = require('../../service');
 
 module.exports = async (req, res) => {
     try {
         const creatingUser = req.body;
-        const UserModel = dataBase.getModel('User');
 
-        const createdUser = await UserModel.create(creatingUser);
+        const registerUser = await userService.userService.registerUser(creatingUser);
 
-        res.json(`Your user with id:${createdUser.id} has been registered please login in`);
-    }catch (e) {
+        res.json(`Your user has been registered please login in`);
+    } catch (e) {
         res.json(e.message)
     }
 

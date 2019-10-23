@@ -1,16 +1,11 @@
-const dataBase = require('../../dataBase').getInstance();
+const userService = require('../../service');
 
 module.exports = async (req, res) => {
     try {
         const {userID} = req.params;
         const updatingData = req.body;
-        const UserModel = dataBase.getModel('User');
 
-        await UserModel.update(updatingData, {
-            where: {
-                id: userID
-            }
-        });
+        const userUpdating = userService.userService.updateUser(userID, updatingData);
 
         res.redirect(`/users/${userID}`)
 

@@ -1,15 +1,10 @@
-const dataBase = require('../../dataBase').getInstance();
+const userService = require('../../service');
 
 module.exports = async (req, res) => {
     try {
         const {userID} = req.params;
-        const UserModel = dataBase.getModel('User');
 
-        UserModel.destroy({
-            where: {
-                id: userID
-            }
-        });
+        const deletUser = userService.userService.deleteUser(userID);
 
         res.json(`User id:${userID} has been deleted`)
 

@@ -1,4 +1,3 @@
-// const dataBase = require('../../dataBase').getInstance();
 const {authService} = require('../../service');
 
 module.exports = async (req, res, next) => {

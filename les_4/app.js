@@ -31,6 +31,6 @@ app.all('*', (req, res) => {
 });
 
 app.listen(3000, () => {
-    console.log('GO GO GO GO GO');
+    console.log('RUN ____________ 3000');
 });
 
